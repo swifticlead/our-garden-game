@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌸 הגינה שלנו</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+<div class="toast" id="toastMsg"></div>
+
+<div class="container">
+
+  <!-- ===== SCREEN 1: START ===== -->
+  <div id="screen-start" class="screen active">
+    <div class="sound-bar">
+      <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
+    </div>
+    <div class="game-title">🌸 הגינה שלנו</div>
+    <div class="game-subtitle">משחק שיתוף לאחיות</div>
+
+    <div class="mode-buttons" id="modeButtons">
+      <button class="mode-btn selected" data-mode="together">
+        <span class="mode-emoji">👭</span>
+        <span class="mode-name">ביחד</span>
+        <span class="mode-desc">שתי אחיות, טלפון אחד</span>
+      </button>
+      <button class="mode-btn" data-mode="solo">
+        <span class="mode-emoji">🌟</span>
+        <span class="mode-name">לבד</span>
+        <span class="mode-desc">משחק אחת לבד</span>
+      </button>
+    </div>
+
+    <div id="nameFields">
+      <label for="player1Name">שם האחות הראשונה 👧</label>
+      <input type="text" id="player1Name" placeholder="כתבי שם כאן..." maxlength="20" />
+      <div id="player2Field">
+        <label for="player2Name">שם האחות השנייה 👧</label>
+        <input type="text" id="player2Name" placeholder="כתבי שם כאן..." maxlength="20" />
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startGame()">🌱 יאללה, בואו נגדל!</button>
+
+    <div class="garden-peek" id="gardenPeek" style="display:none">
+      <button class="btn-secondary" onclick="showScreen('screen-garden')">🌸 הגינה שלנו</button>
+    </div>
+    <div class="prizes-peek">
+      <button class="btn-secondary" onclick="showScreen('screen-prizes')">🏆 איך מרוויחים?</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 2: GAME ===== -->
+  <div id="screen-game" class="screen">
+    <div class="top-bar">
+      <button class="home-btn" onclick="goToStart()">🏠</button>
+      <span class="name-badge" id="gameNames">שחקן</span>
+      <span class="round-badge" id="roundBadge">סיבוב 1</span>
+      <button class="sound-toggle" id="soundToggleGame" onclick="toggleSound()">🔊</button>
+    </div>
+
+    <div class="garden-mini-label">🌸 הגינה שלנו</div>
+    <div class="garden-mini-animals" id="gardenMiniAnimals"></div>
+    <div class="garden-mini" id="gardenMini"></div>
+
+    <div class="scenario-box" id="scenarioBox">
+      <div class="scenario-emoji" id="scenarioEmoji">🌸</div>
+      <div class="scenario-text" id="scenarioText">טוען...</div>
+    </div>
+
+    <div class="feedback-msg" id="feedbackMsg"></div>
+
+    <div class="choices-grid" id="choicesGrid"></div>
+  </div>
+
+  <!-- ===== SCREEN 3: END ===== -->
+  <div id="screen-end" class="screen">
+    <div class="end-title" id="endTitle">🎉 כל הכבוד!</div>
+    <div class="end-sub" id="endSub"></div>
+
+    <div class="result-summary">
+      <div class="result-card">
+        <div class="rc-val" id="finalFlowers">0</div>
+        <div class="rc-lbl">פרחים 🌸</div>
+      </div>
+      <div class="result-card">
+        <div class="rc-val" id="finalGenerous">0</div>
+        <div class="rc-lbl">נדיבות ✅</div>
+      </div>
+      <div class="result-card">
+        <div class="rc-val" id="finalSelfish">0</div>
+        <div class="rc-lbl">ננסה שוב 💛</div>
+      </div>
+    </div>
+
+    <div class="garden-end" id="gardenEnd"></div>
+
+    <div class="milestone-msg" id="milestoneMsg"></div>
+
+    <div class="history-section">
+      <div class="history-title">📊 משחקים קודמים:</div>
+      <div id="historyContainer"></div>
+    </div>
+
+    <button class="btn-primary" onclick="goToStart()">🌱 משחק חדש</button>
+    <button class="btn-secondary" onclick="showScreen('screen-garden')" style="margin-top:10px">🌸 לגינה שלנו</button>
+  </div>
+
+  <!-- ===== SCREEN 4: GARDEN VIEW ===== -->
+  <div id="screen-garden" class="screen">
+    <div class="garden-title" id="gardenTitle">🌸 הגינה שלנו</div>
+    <div class="garden-level-badge" id="gardenLevelBadge">🌱 זרעים</div>
+    <div class="garden-stats" id="gardenStats"></div>
+    <div class="garden-full" id="gardenFull"></div>
+    <div class="garden-animals" id="gardenAnimals"></div>
+    <button class="btn-secondary" onclick="goToStart()">← חזור</button>
+  </div>
+
+  <!-- ===== SCREEN 5: PRIZES ===== -->
+  <div id="screen-prizes" class="screen">
+    <div class="prizes-title">🏆 איך מרוויחים?</div>
+
+    <div class="prizes-section">
+      <div class="prizes-heading">🌸 פרחים לפי בחירה</div>
+      <div class="prizes-table">
+        <div class="prize-row selfish-row">
+          <span>😶 בחירה אנוכית</span><span>0 פרחים</span>
+        </div>
+        <div class="prize-row generous-row">
+          <span>💚 בחירה נדיבה</span><span>1–2 פרחים</span>
+        </div>
+        <div class="prize-row collab-row">
+          <span>💚💚 ביחד! (חלוקה שווה)</span><span>3 פרחים</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prizes-section">
+      <div class="prizes-heading">🐾 חיות שמגיעות לגינה</div>
+      <div class="prizes-table">
+        <div class="prize-row"><span>🦋 פרפר</span><span>10 פרחים</span></div>
+        <div class="prize-row"><span>🐰 ארנב</span><span>20 פרחים</span></div>
+        <div class="prize-row"><span>🐦 ציפור</span><span>30 פרחים</span></div>
+        <div class="prize-row"><span>🦊 שועל</span><span>40 פרחים</span></div>
+        <div class="prize-row"><span>🦄 חד קרן</span><span>50 פרחים</span></div>
+      </div>
+    </div>
+
+    <div class="prizes-section">
+      <div class="prizes-heading">🌈 רמות הגינה</div>
+      <div class="prizes-table">
+        <div class="prize-row"><span>🌱 זרעים</span><span>0 פרחים</span></div>
+        <div class="prize-row"><span>🌿 ניצנים</span><span>10 פרחים</span></div>
+        <div class="prize-row"><span>🌸 גינה</span><span>25 פרחים</span></div>
+        <div class="prize-row"><span>🌈 גן עדן</span><span>50 פרחים</span></div>
+      </div>
+    </div>
+
+    <div class="prizes-section">
+      <div class="prizes-heading">⭐ בונוס</div>
+      <div class="prizes-table">
+        <div class="prize-row collab-row"><span>🌈 קשת</span><span>5 נדיבות ברצף!</span></div>
+        <div class="prize-row collab-row"><span>🎉 קונפטי</span><span>סיבוב מושלם!</span></div>
+      </div>
+    </div>
+
+    <button class="btn-secondary" onclick="goToStart()">← חזרה</button>
+  </div>
+
+</div><!-- /container -->
+
+<script src="storage.js"></script>
+<script src="scenarios.js"></script>
+<script src="garden.js"></script>
+<script src="sound.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
