@@ -18,7 +18,7 @@ const ANIMAL_MILESTONES = [
 ];
 
 // ── Flower Emoji Pool ─────────────────────────────────────────
-const FLOWER_EMOJIS = ['🌸', '🌺', '🌻', '🌷', '🌹', '💐', '🏵️'];
+const FLOWER_EMOJIS = ['🌸', '🌺', '🌻', '🌷', '🌹', '💐', '🏵️', '🌼', '💮', '🍀', '🪷'];
 
 // ── Get Current Level ─────────────────────────────────────────
 function getLevel(flowers) {

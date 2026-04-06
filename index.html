@@ -20,6 +20,9 @@
     </div>
     <div class="game-title">🌸 הגינה שלנו</div>
     <div class="game-subtitle">משחק שיתוף לאחיות</div>
+    <div class="game-intro">כאן גדלה גינה קסומה של שיתוף 🌱
+כל פעם שתבחרו לחלוק ולעזור לאחרים —
+הגינה שלכם תפרח יותר! 🌸🌺🌻</div>
 
     <div class="mode-buttons" id="modeButtons">
       <button class="mode-btn selected" data-mode="together">
@@ -51,6 +54,9 @@
     <div class="prizes-peek">
       <button class="btn-secondary" onclick="showScreen('screen-prizes')">🏆 איך מרוויחים?</button>
     </div>
+    <div class="reset-area">
+      <button class="btn-danger" onclick="confirmReset()">🗑️ איפוס משחק</button>
+    </div>
   </div>
 
   <!-- ===== SCREEN 2: GAME ===== -->
@@ -58,6 +64,7 @@
     <div class="top-bar">
       <button class="home-btn" onclick="goToStart()">🏠</button>
       <span class="name-badge" id="gameNames">שחקן</span>
+      <span class="flower-count-badge" id="flowerCountBadge">🌸 0</span>
       <span class="round-badge" id="roundBadge">סיבוב 1</span>
       <button class="sound-toggle" id="soundToggleGame" onclick="toggleSound()">🔊</button>
     </div>
@@ -130,10 +137,13 @@
           <span>😶 בחירה אנוכית</span><span>0 פרחים</span>
         </div>
         <div class="prize-row generous-row">
-          <span>💚 בחירה נדיבה</span><span>1–2 פרחים</span>
+          <span>❤️ נתת קצת</span><span>1 פרח</span>
         </div>
         <div class="prize-row collab-row">
-          <span>💚💚 ביחד! (חלוקה שווה)</span><span>3 פרחים</span>
+          <span>💚💚 חילקתם ביחד</span><span>2 פרחים</span>
+        </div>
+        <div class="prize-row collab-row" style="background:#f0fdf4">
+          <span>💚 ויתרת לאחותך!</span><span>3 פרחים</span>
         </div>
       </div>
     </div>
@@ -173,7 +183,7 @@
 </div><!-- /container -->
 
 <script src="storage.js"></script>
-<script src="scenarios.js"></script>
+<script src="strings.js"></script>
 <script src="garden.js"></script>
 <script src="sound.js"></script>
 <script src="game.js"></script>

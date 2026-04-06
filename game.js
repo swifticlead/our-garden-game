@@ -1,5 +1,7 @@
 // game.js — Game loop, screen navigation, confetti for "הגינה שלנו"
 
+function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 // ── State ─────────────────────────────────────────────────────
 let appState        = null;   // full persisted state
 let sessionFlowers  = [];     // flowers earned THIS session
@@ -95,6 +97,10 @@ function startGame() {
   roundLocked     = false;
   currentTurn     = 1;
 
+  // Reset flower counter badge
+  const flowerBadge = document.getElementById('flowerCountBadge');
+  if (flowerBadge) flowerBadge.textContent = '🌸 0';
+
   // Update name badge
   const nameBadge = document.getElementById('gameNames');
   if (nameBadge) {
@@ -117,13 +123,14 @@ function nextRound() {
 
   // Update round badge
   const roundBadge = document.getElementById('roundBadge');
-  if (roundBadge) roundBadge.textContent = 'סיבוב ' + roundIdx + ' מתוך ' + ROUNDS_PER_SESSION;
+  if (roundBadge) roundBadge.textContent = (STRINGS['round_badge'] || 'סיבוב %1 מתוך %2')
+    .replace('%1', roundIdx).replace('%2', ROUNDS_PER_SESSION);
 
   // Update name badge per turn (together mode)
   const nameBadge = document.getElementById('gameNames');
   if (nameBadge && sessionMode === 'together' && appState.players.player2) {
     const name = currentTurn === 1 ? appState.players.player1 : appState.players.player2;
-    nameBadge.textContent = '✨ תור של ' + name;
+    nameBadge.textContent = (STRINGS['turn_indicator'] || '✨ תור של %1').replace('%1', name);
     currentTurn = currentTurn === 1 ? 2 : 1;
   }
 
@@ -193,16 +200,19 @@ function handleChoice(btn, choice, scenario) {
     saveState(appState);
 
     // Feedback
-    let praise = randomFrom(GENEROUS_PRAISE);
-    if (choice.flowers >= 3) praise = '🌟 ' + praise.replace(/^[^\s]+\s/, '') + ' \u2014 שלוש פרחים!';
+    const praise = randomFrom(GENEROUS_PRAISE);
     if (feedbackEl) {
-      feedbackEl.textContent = praise;
+      feedbackEl.innerHTML = escHtml(praise) + ' <span class="flower-plus bloom">+' + choice.flowers + ' 🌸</span>';
       feedbackEl.className = 'feedback-msg';
     }
 
     // Animate mini garden + animals
     renderGardenMini(sessionFlowers);
     renderMiniAnimals(appState);
+
+    // Update live flower counter badge
+    const flowerBadge = document.getElementById('flowerCountBadge');
+    if (flowerBadge) flowerBadge.textContent = '🌸 ' + sessionFlowers.length;
 
     // Milestone toasts
     if (earnedRainbow) {
@@ -335,6 +345,21 @@ function goToStart() {
   const peek = document.getElementById('gardenPeek');
   if (peek) peek.style.display = appState.garden.flowers > 0 ? 'block' : 'none';
   showScreen('screen-start');
+}
+
+// ── Reset Game ────────────────────────────────────────────────────────
+function confirmReset() {
+  const msg = STRINGS['confirm_reset'] || 'למחוק את הגינה כולה ולהתחיל מחדש? לא ניתן לשחזר.';
+  if (confirm(msg)) {
+    clearState();
+    appState = defaultState();
+    const peek = document.getElementById('gardenPeek');
+    if (peek) peek.style.display = 'none';
+    const p1 = document.getElementById('player1Name');
+    const p2 = document.getElementById('player2Name');
+    if (p1) p1.value = '';
+    if (p2) p2.value = '';
+  }
 }
 
 // ── Toast ─────────────────────────────────────────────────────

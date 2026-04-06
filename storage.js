@@ -104,3 +104,8 @@ function todayStr() {
   const d = new Date();
   return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
 }
+
+// ── Clear State ───────────────────────────────────────────────
+function clearState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
